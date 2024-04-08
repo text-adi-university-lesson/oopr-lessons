@@ -165,6 +165,7 @@
             this.buttonDelete.TabIndex = 14;
             this.buttonDelete.Text = "Видалити";
             this.buttonDelete.UseVisualStyleBackColor = true;
+            this.buttonDelete.Click += new System.EventHandler(this.buttonDelete_Click);
             // 
             // buttonViewToDisplay
             // 
@@ -174,11 +175,13 @@
             this.buttonViewToDisplay.TabIndex = 15;
             this.buttonViewToDisplay.Text = "Вивести інформацію";
             this.buttonViewToDisplay.UseVisualStyleBackColor = true;
+            this.buttonViewToDisplay.Click += new System.EventHandler(this.buttonViewToDisplay_Click);
             // 
             // richTextBox
             // 
             this.richTextBox.Location = new System.Drawing.Point(16, 153);
             this.richTextBox.Name = "richTextBox";
+            this.richTextBox.ReadOnly = true;
             this.richTextBox.Size = new System.Drawing.Size(707, 131);
             this.richTextBox.TabIndex = 16;
             this.richTextBox.Text = "";

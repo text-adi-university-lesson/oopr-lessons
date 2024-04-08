@@ -20,11 +20,6 @@ namespace l1
             InitializeComponent();
         }
 
-        private void GetStudents()
-        {
-            
-        }
-
         private void buttonWrite_Click(object sender, EventArgs e)
         {
             var students = Storage.GetFromFile();
@@ -36,14 +31,60 @@ namespace l1
             tmpRatings[3] = Convert.ToInt32(numericUpDownStudent4.Value);
             tmpRatings[4] = Convert.ToInt32(numericUpDownStudent5.Value);
             
-            Student student = new Student();
+            students.Add(new Student(name: textBoxStudent.Text, ratings: tmpRatings));
+            Storage.SetToFile(students);
+            MessageBox.Show("Add - OK", "Info", MessageBoxButtons.OK);
 
-            student.name = textBoxStudent.Text;
+        }
+
+        private void buttonDelete_Click(object sender, EventArgs e)
+        {
+            var students = Storage.GetFromFile();
+            string name = textBoxStudent.Text;
+
+            students.RemoveAll(student=> student.name == name);
+            //
+            //Пошук по списку.
+            //
+            Storage.SetToFile(students);
+            MessageBox.Show("Delete - OK", "Info", MessageBoxButtons.OK);
+
+        }
+
+        private void buttonViewToDisplay_Click(object sender, EventArgs e)
+        {
+            richTextBox.Text = "";
+            var students = Storage.GetFromFile();
+            
+            if (students.Count == 0)
+            {
+                richTextBox.Text = "Нічого немає :(";
+            }
+
+            List<Student> badStudent = new List<Student>();
+            int? minBal = null;
+            foreach (var item in students)
+            {
+                int tmpMinBal = item.ratings.Sum();
+                if (!minBal.HasValue || tmpMinBal < minBal)
+                {
+                    minBal = tmpMinBal;
+                    badStudent = new List<Student>();
+                    badStudent.Add(item);
+                    continue;
+                }
+                if (tmpMinBal == minBal)
+                {
+                    badStudent.Add(item);
+                }
 
 
-            student.ratings = tmpRatings;
+            }
+            foreach (var item in badStudent)
+            {
+                richTextBox.Text += item.ToString().Replace(Constant.sep, ',') + "\n";
+            }
 
-            students.Add(student);
 
 
         }
