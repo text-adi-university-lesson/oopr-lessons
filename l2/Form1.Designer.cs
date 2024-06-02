@@ -1,4 +1,7 @@
-﻿namespace l2
+﻿
+using MaterialSkin;
+using MaterialSkin.Controls;
+namespace l2
 {
     partial class Form1
     {

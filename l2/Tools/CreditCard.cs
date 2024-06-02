@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace l2.Tools
-{
+{   
+
     internal class CreditCard
     {
         private bool isBlock;
