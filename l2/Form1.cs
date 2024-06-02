@@ -10,6 +10,8 @@ using System.Windows.Forms;
 using MaterialSkin;
 using MaterialSkin.Controls;
 using l2.Tools;
+using System.Net.NetworkInformation;
+using System.Diagnostics;
 
 namespace l2
 {
@@ -25,6 +27,50 @@ namespace l2
         private void Form1_Load(object sender, EventArgs e)
         {
             payment = new Payment();
+            L3 l3 = new L3();
+            l3.Add("1");
+            l3.Add("2");
+            l3.Add("4");
+            Console.Write(l3[0]);
+            Console.Write(l3[1]);
+            l3[1] = "C#";
+            Console.Write(l3[1]);
+            l3.Print();
+
+            Tools.Delegate processor = new Tools.Delegate();
+            MessageHandler textHandler = new MessageHandler(processor.ProcessTextMessage);
+            MessageHandler imageHandler = new MessageHandler(processor.ProcessImageMessage);
+            MessageHandler videoHandler = new MessageHandler(processor.ProcessVideoMessage);
+
+            MessageHandler textHandler_1 = delegate (string message) {
+                Console.WriteLine($"Processing text message: {message}");
+                processor.AddMessage(message);
+            };
+
+            MessageHandler imageHandler_1 = delegate (string message) {
+                Console.WriteLine($"Processing image message: {message}");
+                processor.AddMessage($"Image: {message}");
+            };
+
+            MessageHandler videoHandler_1 = delegate (string message) {
+                Console.WriteLine($"Processing video message: {message}");
+                processor.AddMessage($"Video: {message}");
+            };
+
+            textHandler("He");
+            imageHandler("image.png");
+            imageHandler_1("imagerrew.png");
+            videoHandler_1("video123.mp4");
+
+            MessageHandler currentHandler = textHandler;
+            currentHandler("Dynamic text message");
+
+            currentHandler = imageHandler;
+            currentHandler("Dynamic image message");
+
+            currentHandler = videoHandler;
+            currentHandler("Dynamic video message");
+
         }
 
         private void materialButtonAddNewClient_Click(object sender, EventArgs e)
@@ -75,6 +121,8 @@ namespace l2
 
             materialComboBoxClientBankAccountList.Items.Clear();
             materialComboBoxClientBankAccountList.Items.AddRange(paymentClient.ToArray());
+            materialComboBoxListAllBankAccount.Items.Clear();
+            materialComboBoxListAllBankAccount.Items.AddRange(paymentClient.ToArray());
         }
 
         private void materialComboBox2_SelectedIndexChanged(object sender, EventArgs e)
@@ -100,6 +148,28 @@ namespace l2
             client.Address = materialTextBox3.Text;
             client.Card = (CreditCard)materialComboBoxClientListCards.SelectedItem;
             client.BankAccount = (BankAccount)materialComboBoxClientBankAccountList.SelectedItem;
+        }
+
+        private void materialButtonBlockCard_Click(object sender, EventArgs e)
+        {
+            var creditCard = ((CreditCard)((MaterialComboBox)sender).SelectedItem);
+            if (creditCard is null) return;
+
+            foreach (var item in payment.Clients)
+            {
+                if (item.Card.Number == creditCard.Number)
+                {
+                    item.blockCredirCard();
+                }
+            }
+        }
+
+        private void materialButtonClientBlockCard_Click(object sender, EventArgs e)
+        {
+            var client = (Client)(materialComboBox2.SelectedItem);
+            if (client is null) return;
+
+            client.blockCredirCard();
         }
     }
 }
